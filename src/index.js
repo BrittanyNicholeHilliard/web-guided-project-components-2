@@ -1,5 +1,5 @@
 import axios from "axios"; 
-
+import breeds from "./breeds";
 // 👉 TASK 1- Test out the following endpoints:
 
 //  https://dog.ceo/api/breeds/image/random
@@ -59,17 +59,29 @@ dogCardMaker({imageURL: "Blah.com", breed: "ugh"});
 //    * Traditional way: put another script tag inside index.html (`https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js`)
 //    * Projects with npm: install it with npm and import it into this file
 
-axios.get("https://dog.ceo/api/breed/akita/images/random/2")
+
+function makeDogCards(selector) {
+  const entryPoint = document.querySelector(selector);
+axios.get("https://dog.ceo/api/breed/bulldog/images/random/3")
 .then(responseVariable => {
 console.log(responseVariable.data.message);
+responseVariable.data.message.forEach(image => {
+  const dogCard = dogCardMaker({imageURL: image, breed: "bulldog"})
+  entryPoint.appendChild(dogCard);
+})
 })
 .catch(error => {
   console.error(error);
 })
 .finally( () => {
   console.log("it's working");
-})
+  })
+}
 
+document.querySelector("button").addEventListener("click", () => {
+document.querySelector(".entry").innerHTML ="";
+  makeDogCards(".entry")
+})
 
 
 // 👉 TASK 5- Fetch dogs from `https://dog.ceo/api/breed/{breed}/images/random/{number}`
@@ -88,3 +100,17 @@ console.log(responseVariable.data.message);
 
 // 👉 (OPTIONAL) TASK 8- Import the breeds from `breeds.js`
 // and loop over them, fetching a dog at each iteration
+
+//import breeds from external data source
+
+//loop over the breeds array 
+
+breeds.forEach(breed => {
+  axios.get(`https://dog.ceo/api/breed/${breed}/images/random/3`)
+  .then(res => {
+    res.data.message.forEach(image => {
+      const dogCard = dogCardMaker({ imageURL: image, breed: breed });
+      document.querySelector(".entry").appendChild(dogCard);
+    })
+  }).catch(err => console.error(err))
+  })
